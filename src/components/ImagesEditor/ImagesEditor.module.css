@@ -1,17 +1,18 @@
 .root {
   padding: 20px;
-  background-color: rgb(84, 64, 64);
 }
 .image {
   position: relative;
 }
 .verticalSlider {
   position: relative;
-  transform: rotate(90deg);
-  left: -150px;
+  /* transform: rotate(90deg); */
+  /* left: -150px; */
+  /* width: 100px; */
 }
 .horizontalSlider {
-  position: relative;
-  top: 50px;
-  left: -120px;
+  /* position: relative; */
+  /* top: 50px; */
+  /* left: -120px; */
+  width: 100px;
 }

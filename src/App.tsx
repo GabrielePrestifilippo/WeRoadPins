@@ -1,9 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useDropzone } from 'react-dropzone'
+
 import { fabric } from 'fabric'
 import classes from './App.module.css'
-
-import classnames from 'classnames'
+import {
+  AccordionDetails,
+  AppBar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Grid,
+  Tab,
+  Tabs,
+  TextField,
+  Toolbar,
+  Typography,
+} from '@mui/material'
 
 import wrx_bottom from './assets/wrx_bottom.png'
 import wrx_diagonal from './assets/wrx_diagonal.png'
@@ -15,16 +29,10 @@ const footers = [wrx_bottom, wrx_diagonal, wrx_diagonal_bottom, wr_classic]
 import italian_flag from './assets/italian_flag.png'
 import diagonal_band from './assets/diagonal_band.png'
 
-import {
-  downloadImage,
-  addLocalImage,
-  addText,
-  getCircle,
-  setCanvasSize,
-  getDropFile,
-} from './utilities'
-import DownloadButton from './components/DownloadButton/DownloadButton'
+import { downloadImage, addLocalImage, addText, getCircle, setCanvasSize } from './utilities'
+
 import ImagesEditor from './components/ImagesEditor/ImagesEditor'
+import DropZone from './components/DropZone/DropZone'
 
 function App() {
   const [uploadedImages, setUploadedImages] = useState<fabric.Image[]>([])
@@ -42,6 +50,8 @@ function App() {
   const [whiteInput, setWhiteInput] = useState('')
   const [redInput, setRedInput] = useState('')
 
+  const [value, setValue] = React.useState(0)
+
   useEffect(() => {
     uploadedImages.forEach((image) => image.bringToFront())
     selectedBand?.bringToFront()
@@ -49,25 +59,6 @@ function App() {
     diagonalText?.bringToFront()
     preview?.bringToFront()
   }, [bottomLogo, preview, diagonalText, uploadedImages.length])
-
-  const onDrop = (acceptedFiles: File[]) => {
-    const acceptedImage = acceptedFiles[0]
-    if (!acceptedImage) return null
-
-    getDropFile(acceptedImage).then((imageUrl: string) => {
-      if (!fabricCanvas) return
-
-      addLocalImage(fabricCanvas, imageUrl).then((image: fabric.Image) => {
-        image.scaleToWidth(2000)
-        image.scaleToHeight(2000)
-        fabricCanvas.centerObject(image)
-        setUploadedImages([...uploadedImages, image])
-        fabricCanvas.add(image)
-      })
-    })
-  }
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   const showPreview = (canvas: fabric.StaticCanvas) => {
     const circlePreview = getCircle()
@@ -128,18 +119,27 @@ function App() {
   }
 
   const renderFooters = () => {
-    return footers.map((footer) => {
-      const className = classnames(
-        classes.buttonLogo,
-        footer === selectedFooter ? classes.selected : null,
-      )
-
-      const setFooter = () => {
-        setFooterImage(footer)
-        setSelectedFooter(footer)
-      }
-      return <img key={footer} src={footer} className={className} onClick={setFooter} />
-    })
+    return (
+      <Grid container spacing={2} display="flex" wrap="wrap">
+        {footers.map((footer) => {
+          const setFooter = () => {
+            setFooterImage(footer)
+            setSelectedFooter(footer)
+          }
+          return (
+            <Card
+              key={footer}
+              sx={{ bgcolor: footer === selectedFooter ? '#f4f8f5' : 'white', margin: 1 }}
+              onClick={setFooter}
+            >
+              <CardContent>
+                <img key={footer} src={footer} className={classes.buttonLogo} />
+              </CardContent>
+            </Card>
+          )
+        })}
+      </Grid>
+    )
   }
 
   const renderAdditionalElements = () => {
@@ -172,41 +172,153 @@ function App() {
       }
     }
 
-    const italianClassName = classnames(
-      classes.buttonLogo,
-      bandImage === italian_flag ? classes.selected : null,
+    return (
+      <Grid container spacing={2}>
+        <Card sx={{ bgcolor: bandImage === italian_flag ? '#f4f8f5' : 'white', margin: 2 }}>
+          <CardHeader subheader="Italian Flag" />
+          <CardContent>
+            <img src={italian_flag} className={classes.buttonLogo} />
+          </CardContent>
+          <CardActions>
+            <Button size="small" onClick={setItalian}>
+              {bandImage === italian_flag ? 'Remove Flag' : 'Add Flag'}
+            </Button>
+          </CardActions>
+        </Card>
+
+        <Card sx={{ bgcolor: bandImage === diagonal_band ? '#f4f8f5' : 'white', margin: 2 }}>
+          <CardContent>
+            <img src={diagonal_band} className={classes.buttonLogo} />
+            <Typography variant="subtitle2">
+              Remove and Add to see updated text. <br />
+              Add spaces to align the text properly.
+            </Typography>
+            <Box
+              component="form"
+              sx={{
+                '& .MuiTextField-root': { m: 1, width: '20ch' },
+                marginTop: 2,
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                variant="outlined"
+                value={redInput}
+                label="Red Text"
+                onChange={(evt) => setRedInput(evt.target.value)}
+              />
+              <TextField
+                variant="outlined"
+                label="White Text"
+                value={whiteInput}
+                onChange={(evt) => setWhiteInput(evt.target.value)}
+              />
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Button size="small" onClick={setDiagonal}>
+              {bandImage === diagonal_band ? 'Remove Text' : 'Add Text'}
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
     )
-    const diagonalClassName = classnames(
-      classes.buttonLogo,
-      bandImage === diagonal_band ? classes.selected : null,
-    )
+  }
+
+  const onImageAdd = (imageUrl: string) => {
+    if (!fabricCanvas) return null
+    addLocalImage(fabricCanvas, imageUrl).then((image: fabric.Image) => {
+      image.scaleToWidth(2000)
+      image.scaleToHeight(2000)
+      fabricCanvas.centerObject(image)
+      setUploadedImages([...uploadedImages, image])
+      fabricCanvas.add(image)
+    })
+  }
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
+
+  interface TabPanelProps {
+    children?: React.ReactNode
+    index: number
+    value: number
+  }
+  function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props
 
     return (
-      <>
-        <img src={italian_flag} className={italianClassName} onClick={setItalian} />
-        <img src={diagonal_band} className={diagonalClassName} onClick={setDiagonal} />
-      </>
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
     )
   }
 
   return (
-    <div className="App">
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <p>Drag & drop an image here, or click to select</p>
-      </div>
-      <div className={classes.wrapper}>
-        <canvas ref={canvasRef} className={classes.canvas} />
-      </div>
-      <ImagesEditor uploadedImages={uploadedImages} render={() => fabricCanvas?.renderAll()} />
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Pins generator
+          </Typography>
+          <Button color="inherit" sx={{ marginRight: 2, padding: 1 }} onClick={download}>
+            Download Image
+          </Button>
+          <a href="https://www.buymeacoffee.com/gabrieleprf" target="_blank" rel="noreferrer">
+            <img
+              src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+              alt="Buy Me A Coffee"
+              style={{ height: '40px' }}
+            />
+          </a>
+        </Toolbar>
+      </AppBar>
+      <Grid sx={{ padding: 2 }}>
+        <Grid display="flex" item xs={12} justifyContent="center" alignItems="center">
+          <Card variant="outlined" className={classes.wrapper}>
+            <canvas ref={canvasRef} className={classes.canvas} />
+          </Card>
+        </Grid>
 
-      <DownloadButton onClick={download} />
-      {renderFooters()}
-      {renderAdditionalElements()}
-      <p>red</p>
-      <input value={redInput} onChange={(evt) => setRedInput(evt.target.value)} />
-      <p>white</p>
-      <input value={whiteInput} onChange={(evt) => setWhiteInput(evt.target.value)} />
+        <Box sx={{ width: '100%', background: 'white' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="Background" />
+              <Tab label="Footer" />
+              <Tab label="Other elements" />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <Typography>Add one or multiple background images and edit the position</Typography>
+            <DropZone onImageAdd={onImageAdd} />
+            <ImagesEditor
+              uploadedImages={uploadedImages}
+              render={() => fabricCanvas?.renderAll()}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <AccordionDetails>{renderFooters()}</AccordionDetails>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <AccordionDetails>{renderAdditionalElements()}</AccordionDetails>
+          </CustomTabPanel>
+          <Button variant="contained" className={classes.button} onClick={download}>
+            Download Image
+          </Button>
+        </Box>
+      </Grid>
     </div>
   )
 }

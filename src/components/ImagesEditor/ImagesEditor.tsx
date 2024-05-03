@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import classes from './ImagesEditor.module.css'
+import { Card, CardContent, CardMedia, Grid, Slider, Typography } from '@mui/material'
 
 type Props = {
   uploadedImages: fabric.Image[]
@@ -12,11 +13,11 @@ const ImagesEditor = (props: Props) => {
   if (!uploadedImages.length) return null
 
   return (
-    <>
+    <Grid container spacing={2} display="flex" wrap="wrap">
       {uploadedImages.map((uploadedImage, index) => {
         if (!uploadedImage.width || !uploadedImage.height) return null
         const onSliderChange = (evt: any, isX: boolean) => {
-          const change = Number(evt.target.value)
+          const change = Number(evt.target?.value)
           if (uploadedImage && change) {
             const newImagesPosition = [...imagesPosition]
             const [currentX, currentY] = imagesPosition[index] || [0, 0]
@@ -38,28 +39,34 @@ const ImagesEditor = (props: Props) => {
 
         return (
           <div key={index} className={classes.root}>
-            <img src={uploadedImage.getSrc()} width={100} className={classes.image} />
-
-            <input
-              className={classes.horizontalSlider}
-              type="range"
-              min={uploadedImage.width * -1.4}
-              max={uploadedImage.width}
-              value={width}
-              onChange={(evt) => onSliderChange(evt, true)}
-            />
-            <input
-              className={classes.verticalSlider}
-              type="range"
-              min={uploadedImage.height * -1.4}
-              max={uploadedImage.height}
-              value={height}
-              onChange={(evt) => onSliderChange(evt, false)}
-            />
+            <Card sx={{ width: 250 }}>
+              <CardMedia sx={{ height: 100 }} image={uploadedImage.getSrc()} />
+              {/* <img src={uploadedImage.getSrc()} width={100} className={classes.image} /> */}
+              <CardContent>
+                <Typography>Horizontal alignment</Typography>
+                <Slider
+                  className={classes.horizontalSlider}
+                  sx={{ width: 100 }}
+                  min={uploadedImage.width * -1.4}
+                  max={uploadedImage.width}
+                  value={width}
+                  onChange={(evt) => onSliderChange(evt, true)}
+                />
+                <Typography>Vertical alignment</Typography>
+                <Slider
+                  className={classes.verticalSlider}
+                  sx={{ width: 100 }}
+                  min={uploadedImage.height * -1.4}
+                  max={uploadedImage.height}
+                  value={height}
+                  onChange={(evt) => onSliderChange(evt, false)}
+                />
+              </CardContent>
+            </Card>
           </div>
         )
       })}
-    </>
+    </Grid>
   )
 }
 

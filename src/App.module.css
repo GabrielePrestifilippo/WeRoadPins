@@ -1,3 +1,7 @@
+.root {
+  background-color: rgb(246 248 253);
+  margin-bottom: 20px;
+}
 .canvas {
   border: 2px solid gray;
   pointer-events: none;
@@ -19,4 +23,9 @@
 }
 .selected {
   border: 3px solid rgb(145, 61, 61);
+}
+
+.button {
+  width: 100%;
+  margin-bottom: 50px;
 }
