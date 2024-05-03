@@ -27,7 +27,8 @@ const DropZone = (props: Props) => {
       <CardContent {...getRootProps()}>
         <input {...getInputProps()} />
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Drag & drop an image here, or click to select
+          Drag & drop an image here, or click to select a local image. <br />
+          Recommended size 2000*2000
         </Typography>
       </CardContent>
     </Box>

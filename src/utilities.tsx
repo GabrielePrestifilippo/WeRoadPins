@@ -26,12 +26,12 @@ export const addText = (canvas: fabric.StaticCanvas, text1: string, text2: strin
   const fontToLoad = 'Gilroy' // Replace with your font name
 
   const redText = new fabric.Text(text1, {
-    fontSize: 180,
+    fontSize: 190,
     fill: '#ff4758',
     charSpacing: 10,
     fontFamily: fontToLoad,
     stroke: '#ff4758',
-    strokeWidth: 5,
+    strokeWidth: 6,
   })
 
   const group = new fabric.Group([redText], {
@@ -40,7 +40,7 @@ export const addText = (canvas: fabric.StaticCanvas, text1: string, text2: strin
   })
 
   const whiteText = new fabric.Text(text2, {
-    fontSize: 180,
+    fontSize: 190,
     fill: 'white',
     charSpacing: 10,
     fontFamily: fontToLoad,
@@ -49,7 +49,7 @@ export const addText = (canvas: fabric.StaticCanvas, text1: string, text2: strin
     originX: 'left',
     originY: 'top',
     stroke: '#fff',
-    strokeWidth: 5,
+    strokeWidth: 6,
   })
   group.addWithUpdate(whiteText)
 
@@ -78,8 +78,8 @@ export const setCanvasSize = (canvasElement: HTMLCanvasElement) => {
       1 /
         Math.max(
           Math.max(
-            (canvasElement.clientWidth / window.innerWidth) * 1.2,
-            (canvasElement.clientHeight / window.innerHeight) * 1.2,
+            (canvasElement.clientWidth / window.innerWidth) * 1.3,
+            (canvasElement.clientHeight / window.innerHeight) * 1.3,
           ),
           3,
         ) +

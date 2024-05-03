@@ -29,3 +29,8 @@
   width: 100%;
   margin-bottom: 50px;
 }
+
+.divHeader {
+  display: flex;
+  width: 70%;
+}

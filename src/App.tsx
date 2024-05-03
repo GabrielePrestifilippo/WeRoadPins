@@ -33,6 +33,8 @@ import { downloadImage, addLocalImage, addText, getCircle, setCanvasSize } from 
 
 import ImagesEditor from './components/ImagesEditor/ImagesEditor'
 import DropZone from './components/DropZone/DropZone'
+import TabPanel from './components/TabPanel/TabPanel'
+import Popover from './components/Popover/Popover'
 
 function App() {
   const [uploadedImages, setUploadedImages] = useState<fabric.Image[]>([])
@@ -47,8 +49,8 @@ function App() {
   const [bandImage, setBandImage] = useState<string | null>(null)
   const [diagonalText, setDiagonalText] = useState<fabric.Group | null>(null)
 
-  const [whiteInput, setWhiteInput] = useState('')
-  const [redInput, setRedInput] = useState('')
+  const [redInput, setRedInput] = useState('     We')
+  const [whiteInput, setWhiteInput] = useState('Road')
 
   const [value, setValue] = React.useState(0)
 
@@ -241,38 +243,16 @@ function App() {
     setValue(newValue)
   }
 
-  interface TabPanelProps {
-    children?: React.ReactNode
-    index: number
-    value: number
-  }
-  function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    )
-  }
-
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="secondary">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Pins generator
-          </Typography>
+          <div className={classes.divHeader}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex' }}>
+              Pins generator
+              <Popover />
+            </Typography>
+          </div>
           <Button color="inherit" sx={{ marginRight: 2, padding: 1 }} onClick={download}>
             Download Image
           </Button>
@@ -287,9 +267,9 @@ function App() {
       </AppBar>
       <Grid sx={{ padding: 2 }}>
         <Grid display="flex" item xs={12} justifyContent="center" alignItems="center">
-          <Card variant="outlined" className={classes.wrapper}>
+          <div className={classes.wrapper}>
             <canvas ref={canvasRef} className={classes.canvas} />
-          </Card>
+          </div>
         </Grid>
 
         <Box sx={{ width: '100%', background: 'white' }}>
@@ -300,20 +280,20 @@ function App() {
               <Tab label="Other elements" />
             </Tabs>
           </Box>
-          <CustomTabPanel value={value} index={0}>
+          <TabPanel value={value} index={0}>
             <Typography>Add one or multiple background images and edit the position</Typography>
             <DropZone onImageAdd={onImageAdd} />
             <ImagesEditor
               uploadedImages={uploadedImages}
               render={() => fabricCanvas?.renderAll()}
             />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
             <AccordionDetails>{renderFooters()}</AccordionDetails>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
+          </TabPanel>
+          <TabPanel value={value} index={2}>
             <AccordionDetails>{renderAdditionalElements()}</AccordionDetails>
-          </CustomTabPanel>
+          </TabPanel>
           <Button variant="contained" className={classes.button} onClick={download}>
             Download Image
           </Button>
