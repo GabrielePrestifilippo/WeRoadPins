@@ -22,22 +22,25 @@ export const addLocalImage = (fabricCanvas: fabric.StaticCanvas, localImagePath:
   })
 }
 
-export const addText = (canvas: fabric.StaticCanvas) => {
+export const addText = (canvas: fabric.StaticCanvas, text1: string, text2: string) => {
   const fontToLoad = 'Gilroy' // Replace with your font name
 
-  const text1 = new fabric.Text('Red', {
-    fontSize: 60,
-    fill: 'red',
+  const redText = new fabric.Text(text1, {
+    fontSize: 180,
+    fill: '#ff4758',
     charSpacing: 10,
     fontFamily: fontToLoad,
+    stroke: '#ff4758',
+    strokeWidth: 5,
   })
 
-  const group = new fabric.Group([text1], {
-    top: 400,
+  const group = new fabric.Group([redText], {
+    top: 900,
+    // left: 50,
   })
 
-  const whiteText = new fabric.Text('White', {
-    fontSize: 60,
+  const whiteText = new fabric.Text(text2, {
+    fontSize: 180,
     fill: 'white',
     charSpacing: 10,
     fontFamily: fontToLoad,
@@ -45,12 +48,15 @@ export const addText = (canvas: fabric.StaticCanvas) => {
     top: group.get('top'),
     originX: 'left',
     originY: 'top',
+    stroke: '#fff',
+    strokeWidth: 5,
   })
   group.addWithUpdate(whiteText)
 
   group.angle = -45
   canvas.add(group)
   canvas.renderAll()
+  return group
 }
 
 export const getCircle = () => {

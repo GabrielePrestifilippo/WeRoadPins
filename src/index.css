@@ -9,8 +9,3 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-@font-face {
-  font-family: 'Gilroy'; /* Replace with your font name */
-  src: url('./assets/Gilroy-ExtraBold.otf') format('opentype'); /* Adjust path and format */
-}
