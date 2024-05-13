@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/WeRoadPins/static/css/main.a2f12f0e.css",
-    "main.js": "/WeRoadPins/static/js/main.fa1f6612.js",
+    "main.js": "/WeRoadPins/static/js/main.02b74b35.js",
     "static/media/pins.jpeg": "/WeRoadPins/static/media/pins.cf0a9f87510b98daf21a.jpeg",
     "static/media/wrx_diagonal.png": "/WeRoadPins/static/media/wrx_diagonal.8f4bdfc01509b606990f.png",
     "static/media/wrx_diagonal_bottom.png": "/WeRoadPins/static/media/wrx_diagonal_bottom.aa3d646d7a536b14b6fb.png",
@@ -11,10 +11,10 @@
     "static/media/diagonal_band.png": "/WeRoadPins/static/media/diagonal_band.c5ae375e295247c51a8e.png",
     "index.html": "/WeRoadPins/index.html",
     "main.a2f12f0e.css.map": "/WeRoadPins/static/css/main.a2f12f0e.css.map",
-    "main.fa1f6612.js.map": "/WeRoadPins/static/js/main.fa1f6612.js.map"
+    "main.02b74b35.js.map": "/WeRoadPins/static/js/main.02b74b35.js.map"
   },
   "entrypoints": [
     "static/css/main.a2f12f0e.css",
-    "static/js/main.fa1f6612.js"
+    "static/js/main.02b74b35.js"
   ]
 }
