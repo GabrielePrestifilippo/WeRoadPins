@@ -8,6 +8,7 @@ type Props = {
 }
 const ImagesEditor = (props: Props) => {
   const [imagesPosition, setImagesPosition] = useState<number[][]>([])
+  const [scale, setScale] = useState<number>(80)
 
   const { uploadedImages, render } = props
   if (!uploadedImages.length) return null
@@ -16,6 +17,16 @@ const ImagesEditor = (props: Props) => {
     <Grid container spacing={2} display="flex" wrap="wrap">
       {uploadedImages.map((uploadedImage, index) => {
         if (!uploadedImage.width || !uploadedImage.height) return null
+
+        const onScaleChange = (evt: any, isX: boolean) => {
+          const change = Number(evt.target?.value)
+          if (uploadedImage && change) {
+            uploadedImage.scaleToHeight((change * 2000) / 80)
+            // uploadedImage.scaleY = change / 100
+            setScale(change)
+            render()
+          }
+        }
         const onSliderChange = (evt: any, isX: boolean) => {
           const change = Number(evt.target?.value)
           if (uploadedImage && change) {
@@ -60,6 +71,15 @@ const ImagesEditor = (props: Props) => {
                   max={uploadedImage.height}
                   value={height}
                   onChange={(evt) => onSliderChange(evt, false)}
+                />
+                <Typography>Scale</Typography>
+                <Slider
+                  className={classes.verticalSlider}
+                  sx={{ width: 100 }}
+                  min={1}
+                  max={100}
+                  value={scale}
+                  onChange={(evt) => onScaleChange(evt, false)}
                 />
               </CardContent>
             </Card>
